@@ -1,0 +1,40 @@
+@import '@fontsource/glory';
+@import '@fontsource/inter';
+
+.login-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.login-container h1 {
+    font: 400 60px 'Glory';
+    margin-top: 144px;
+    margin-bottom: 100px;
+    text-align: center;
+    color: #000000;
+}
+
+.login-container div {
+    width: 430px;
+    height: 229px;
+    background: #222459;
+    border-radius: 89px;
+}
+
+.login-container div p {
+    font: 400 48px 'Glory';
+    text-align: center;
+    color: #FFFFFF;
+    margin-top: 35px;
+    margin-bottom: 25px;
+}
+
+.login-container div button {
+    font: 400 24px 'Inter';
+    width: 350px;
+    height: 70.31px;
+    background: #FFFFFF;
+    border-radius: 47px;
+    text-align: center;
+}
