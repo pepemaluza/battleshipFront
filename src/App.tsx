@@ -25,7 +25,9 @@ function App() {
 
     //{i: "key", x: 0, y: 0, l: 4, v: 0}
 
-    const span = 1;
+    const handleTurnShip = () => {
+        alert(layout.flatMap(e => { return e.i}).toString());
+    }
 
     return (
         <div className="App">
@@ -39,7 +41,7 @@ function App() {
                 onLayoutChange={onLayoutChange}
             >
                 <div key="1" title='OKOK' onDoubleClick={() => {alert("Clicked.")}} />
-                <div key="2" />
+                <div key="2"  onDoubleClick={() => {handleTurnShip()}} />
                 <div key="3" />
                 <div key="4" />
                 <div key="5" />
