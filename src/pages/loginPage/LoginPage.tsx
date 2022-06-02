@@ -1,12 +1,12 @@
 import React from 'react';
-import './Login.css';
+import './LoginPage.css';
 
 const handleClick = () => {
     //TODO integrar con el Back para la autenticacion con Google;
     alert("OK");
 }
 
-function Login() {
+function LoginPage() {
   return (
     <div className="login-container">
        <h1>BattleShips!</h1>
@@ -20,4 +20,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default LoginPage;
