@@ -69,8 +69,9 @@ function GamePage() {
         }   
     });
 
-    return (
-        <div className="game-container">
+    const PositioningStage = () =>  {
+        return (
+            <>
             <div style={{marginLeft: 'auto', marginRight: 'auto', position: 'relative', width: '480px', marginTop: '120px', border: '1px solid black', overflow: 'hidden'}}>
                 <div style={{width: '480px', height: '480px'}}>
                     <ReactGridLayout
@@ -92,6 +93,13 @@ function GamePage() {
             </div>
             <button onClick={() => {createRandomBoard()}}>Aleatorio</button>
             <button onClick={() => {handleSendBoard()}}>Enviar</button>
+            </>
+        )
+    }
+
+    return (
+        <div className="game-container">
+            <PositioningStage />
         </div>
     )
 }
