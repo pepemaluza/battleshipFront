@@ -11,13 +11,13 @@ const ReactGridLayout = WidthProvider(RLG);
 function App() {
 
     var layoutInit: RLG.Layout[] = [
-        {i: "0", x: 9, y: 0, w: 5, h: 1},
+        {i: "0", x: 0, y: 0, w: 5, h: 1},
         {i: "1", x: 0, y: 0, w: 4, h: 1},
         {i: "2", x: 0, y: 0, w: 3, h: 1},
-        {i: "3", x: 6, y: 0, w: 3, h: 1},
+        {i: "3", x: 0, y: 0, w: 3, h: 1},
         {i: "4", x: 0, y: 0, w: 2, h: 1},
-        {i: "5", x: 0, y: 1, w: 2, h: 1},
-        {i: "6", x: 2, y: 2, w: 2, h: 1},
+        {i: "5", x: 0, y: 0, w: 2, h: 1},
+        {i: "6", x: 0, y: 0, w: 2, h: 1},
     ]
     
     const [layout, setLayout] = React.useState(layoutInit)
@@ -47,19 +47,38 @@ function App() {
     }
 
     const randomBoard = () => {
-        const newBoard: RLG.Layout[] = [];
-        for (let index = 0; index < layout.length; index++) {
-            let t = layout[index];
-            let swap = Math.floor(Math.random()*2)
-            newBoard.push({i: t.i, x: Math.floor(Math.random()*(10)), y: Math.floor(Math.random()*(10)), w: swap? t.h: t.w, h: swap? t.w: t.h})
+        let newBoard: RLG.Layout[] = [];
+        let cond = true;
+        while (cond) {
+            for (let index = 0; index < layout.length; index++) {
+                let t = layout[index];
+                let swap = Math.floor(Math.random()*2)
+                newBoard[index] = ({i: t.i, x: Math.floor(Math.random()*(10)), y: Math.floor(Math.random()*(10)), w: swap? t.h: t.w, h: swap? t.w: t.h})
+            }
+            cond = checkOverBounds(newBoard)
         }
         setLayout(newBoard);
     }
 
+    const checkOverBounds = (layout: RLG.Layout[]) => {
+        for (let index = 0; index < layout.length; index++) {
+            if (layout[index].x+layout[index].w > 10 || layout[index].y+layout[index].h > 10) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    React.useEffect(() => {
+        if (checkOverBounds(layout)) {
+            randomBoard();
+        }   
+    });
+
     return (
         <div className="App">
             <Navbar />
-            <div style={{marginLeft: 'auto', marginRight: 'auto', position: 'relative', width: '480px', marginTop: '120px', border: '1px solid black'}}>
+            <div style={{marginLeft: 'auto', marginRight: 'auto', position: 'relative', width: '480px', marginTop: '120px', border: '1px solid black', overflow: 'hidden'}}>
             <div style={{width: '480px', height: '480px'}}>
                 <ReactGridLayout
                     className='layout'
@@ -67,7 +86,7 @@ function App() {
                     autoSize
                     cols={10}
                     rowHeight={36}
-                    verticalCompact={false}
+                    compactType={null}
                     layout={layout}
                     maxRows={10}
                     isBounded={true}
