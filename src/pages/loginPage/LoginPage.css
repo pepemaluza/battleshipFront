@@ -1,5 +1,3 @@
-@import '@fontsource/glory';
-@import '@fontsource/inter';
 
 .login-container {
     display: flex;
@@ -8,14 +6,16 @@
 }
 
 .login-container h1 {
-    font: 400 60px 'Glory';
+    font: 400 60px -apple-system;
     margin-top: 144px;
     margin-bottom: 100px;
     text-align: center;
     color: #000000;
 }
 
-.login-container div {
+.login-container-div {
+    display: flex;
+    align-items: center;
     width: 430px;
     height: 229px;
     background: #222459;
@@ -23,7 +23,7 @@
 }
 
 .login-container div p {
-    font: 400 48px 'Glory';
+    font: 400 48px -apple-system;
     text-align: center;
     color: #FFFFFF;
     margin-top: 35px;
@@ -33,7 +33,8 @@
 .login-container div button {
     font: 400 24px 'Inter';
     width: 350px;
-    height: 70.31px;
+    display: flex;
+    align-content: center;
     background: #FFFFFF;
     border-radius: 47px;
     text-align: center;
