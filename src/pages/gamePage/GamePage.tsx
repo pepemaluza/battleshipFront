@@ -1,9 +1,23 @@
+import { hover } from '@testing-library/user-event/dist/hover';
 import React from 'react';
+import './GamePage.css';
 import RLG, {WidthProvider} from 'react-grid-layout';
+
+import { useNavigate } from 'react-router-dom';
 
 const ReactGridLayout = WidthProvider(RLG);
 
-function GamePage() {
+function GamePage(props: any) {
+
+    
+    const navigate = useNavigate();
+    const socket = props.ws;
+    const status = props.statusMatch;
+    const canShot = props.canShot;
+    const shots = props.shots;
+    const setShots = props.setShots;
+    const shoteds = props.shoteds;
+    const setShoteds = props.setShoteds;
 
     var layoutInit: RLG.Layout[] = [
         {i: "0", x: 0, y: 0, w: 5, h: 1},
@@ -14,6 +28,30 @@ function GamePage() {
         {i: "5", x: 0, y: 0, w: 2, h: 1},
         {i: "6", x: 0, y: 0, w: 2, h: 1},
     ]
+
+    function loadShoteds() {
+        let layoutShoteds: RLG.Layout[] = [];
+
+        for (let y = 0; y < shoteds.length; y++) {
+            for (let x = 0; x < shoteds[y].length; x++) {
+                layoutShoteds.push({i: "0_"+y+""+x, x: x, y: y, w: 1, h: 1, static: true})
+            }
+        }
+
+        return layoutShoteds;
+    }
+
+    function loadShots() {
+        let layoutShots: RLG.Layout[] = [];
+
+        for (let y = 0; y < shots.length; y++) {
+            for (let x = 0; x < shots[y].length; x++) {
+                layoutShots.push({i: "0_"+y+""+x, x: x, y: y, w: 1, h: 1, static: true})
+            }
+        }
+
+        return layoutShots;
+    }
 
     const [layout, setLayout] = React.useState(layoutInit)
 
@@ -34,8 +72,32 @@ function GamePage() {
     }
 
     const handleSendBoard = () => {
-        //TODO send connect to backend.
-        console.log(layout)
+        socket.emit("ready", sendBoard());
+        console.log(sendBoard());
+    }
+
+    function sendBoard() {
+        let temp: number[][] = [
+            [0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0],
+            [0,0,0,0,0,0,0,0,0,0],
+        ];
+        layout.forEach((l) => {
+            for (let cw = 0; cw < l.w; cw++) {
+                temp[l.y][l.x + cw] = 1;
+            }
+            for (let ch = 0; ch < l.h; ch++) {
+                temp[l.y + ch][l.x] = 1;
+            }
+        })
+        return temp;
     }
 
     const createRandomBoard = () => {
@@ -69,30 +131,105 @@ function GamePage() {
         }   
     });
 
+    const buttonStyle = {color: 'white', borderRadius: '25px', width: '251px', height: '49px', alignItems: 'center', background: '#222459', boxShadow: '0px 10px 15px rgba(0, 0, 0, 0.25)', margin: '20px'}
+
     const PositioningStage = () =>  {
         return (
             <>
-            <div style={{marginLeft: 'auto', marginRight: 'auto', position: 'relative', width: '480px', marginTop: '120px', border: '1px solid black', overflow: 'hidden'}}>
-                <div style={{width: '480px', height: '480px'}}>
-                    <ReactGridLayout
-                        className='layout'
-                        preventCollision={true}
-                        cols={10}
-                        rowHeight={36}
-                        compactType={null}
-                        layout={layout}
-                        maxRows={10}
-                        isBounded={true}
-                        onLayoutChange={onGridLayoutChange}
-                    >
-                        {layout.map((l) => {
-                            return <div key={l.i} onDoubleClick={() => {handleTurnShip((parseInt(l.i)) )}} />
-                        })}
-                    </ReactGridLayout>
-                </div>
-            </div>
-            <button onClick={() => {createRandomBoard()}}>Aleatorio</button>
-            <button onClick={() => {handleSendBoard()}}>Enviar</button>
+            {status === "positioning"?
+                <>
+                <div style={{marginLeft: 'auto', marginRight: 'auto', position: 'relative', width: '480px', height: '466px', marginTop: '120px', border: '1px solid black', overflow: 'hidden'}}>
+                    <div style={{width: '480px', height: '466px', position: 'absolute'}}>
+                        <ReactGridLayout
+                            className='layout'
+                            preventCollision={true}
+                            cols={10}
+                            rowHeight={36}
+                            compactType={null}
+                            layout={layout}
+                            maxRows={10}
+                            isBounded={true}
+                            onLayoutChange={onGridLayoutChange}
+                        >
+                            {layout.map((l) => {
+                                return <div key={l.i} className="ships" onDoubleClick={() => {handleTurnShip((parseInt(l.i)) )}} />
+                            })}
+                        </ReactGridLayout>
+                    </div>
+                </ div>
+                <button style={buttonStyle} onClick={() => {createRandomBoard()}}>Aleatorio</button>
+                <button style={buttonStyle} onClick={() => {handleSendBoard()}}>Enviar</button>
+                </>
+                :
+                <></>
+            }
+            {status === "play"?
+                <div style={{display: 'flex', flexDirection: 'row'}}>
+                <div style={{marginLeft: 'auto', marginRight: 'auto', position: 'relative', width: '480px', height: '466px', marginTop: '120px', border: '1px solid black', overflow: 'hidden'}}>
+                    <div style={{width: '480px', height: '466px', position: 'absolute'}}>
+                        <ReactGridLayout
+                            className='layout'
+                            preventCollision={true}
+                            cols={10}
+                            rowHeight={36}
+                            compactType={null}
+                            layout={layout}
+                            maxRows={10}
+                            isBounded={true}
+                            onLayoutChange={onGridLayoutChange}
+                        >
+                            {layout.map((l) => {
+                                return <div key={l.i} className="ships" onDoubleClick={() => {handleTurnShip((parseInt(l.i)) )}} />
+                            })}
+                        </ReactGridLayout>
+                    </div>
+                    <div style={{width: '480px', height: '466px', position: 'absolute'}}>
+                        <ReactGridLayout
+                            className='layout'
+                            preventCollision={true}
+                            cols={10}
+                            rowHeight={36}
+                            compactType={null}
+                            layout={loadShoteds()}
+                            maxRows={10}
+                            isBounded={true}
+                        >
+                            {loadShoteds().map((l) => {
+                                return <div key={l.i} className={(shoteds[l.y][l.x] === 1)? "shoted":"shotedno"} />
+                            })}
+                        </ReactGridLayout>
+                    </div>
+                </ div>
+                <div style={{marginLeft: 'auto', marginRight: 'auto', position: 'relative', width: '480px', height: '466px', marginTop: '120px', border: '1px solid black', overflow: 'hidden'}}>
+                    <div style={{width: '480px', height: '466px', position: 'absolute'}}>
+                        <ReactGridLayout
+                            className='layout'
+                            preventCollision={true}
+                            cols={10}
+                            rowHeight={36}
+                            compactType={null}
+                            layout={loadShots()}
+                            maxRows={10}
+                            isBounded={true}
+                        >
+                            {loadShots().map((l) => {
+                                return <div key={l.i} onClick={() => {
+                                    if (canShot) {
+                                        let temp = shots;
+                                        temp[l.y][l.x] = 1;
+                                        setShots(temp)
+                                        socket.emit("shot", {x: l.x, y: l.y});
+                                    }
+                                }
+                                } className={(shots[l.y][l.x] === 1)? "shoton":((shots[l.y][l.x] === 2)? "shotno" : "shots")} />
+                            })}
+                        </ReactGridLayout>
+                    </div>
+                </ div>
+                </ div>
+                :
+                <></>
+            }
             </>
         )
     }
@@ -100,6 +237,7 @@ function GamePage() {
     return (
         <div className="game-container">
             <PositioningStage />
+            {props.matchOver? <button onClick={() => {navigate("/home")}}>Home</button> : <></>}
         </div>
     )
 }

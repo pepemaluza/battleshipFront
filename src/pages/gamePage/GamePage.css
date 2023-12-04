@@ -1,0 +1,52 @@
+.layout .shots {
+    border: 1px solid black;
+    padding: 3px;
+}
+
+.layout .shoted {
+    border: 1px solid red;
+    background-color: rgba(255, 0, 0, 0.3);
+    padding: 3px;
+}
+
+.layout .shotedno {
+    border: 1px solid black;
+    padding: 3px;
+}
+
+.layout .ships {
+    border: 2px solid black;
+    border-radius: 25px;
+    margin-top: 2px;
+    margin-left: 2px;
+}
+
+.layout {
+    margin-top: -6px;
+    margin-left: -6px;
+}
+
+.react-draggable-dragging {
+    background-color: blue;
+    z-index: 1;
+}
+
+.layout .shots:hover {
+    background-color: red;
+}
+
+.layout .shots:active {
+    background-color: blue;
+}
+
+.layout .shoton {
+    background-color: black;
+    border-radius: 10px;
+    padding: 4px;
+}
+
+.layout .shotno {
+    background-color: darkblue;
+    border-radius: 10px;
+    padding: 4px;
+}
