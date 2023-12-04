@@ -10,13 +10,13 @@ function LoginPage(props: any) {
   const navigate = useNavigate();
 
   const handleLogin = async () => {
-    const result: any = await axios.post('http://localhost:5000/auth/', {
+    const result: any = await axios.post('http://20.38.36.6:5000/auth/', {
       token: null,
       name: 'Guest',
       email: email,
     });
     props.setUser(result.data.user);
-    props.setSocket(socketIOClient('http://localhost:5001/'));
+    props.setSocket(socketIOClient('http://20.38.36.6:5001/'));
 
     navigate('/home');
   };
