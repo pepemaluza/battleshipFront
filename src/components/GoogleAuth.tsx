@@ -52,7 +52,7 @@ const GoogleAuth = (props: any) => {
   const navigate = useNavigate();
 
   return (
-    <div className={'login-container-div'}>
+    <div>
       {/*
       <GoogleLogin
         clientId={"985762524543-cighrje1bfoql8mfn96r4uvulsgqutck.apps.googleusercontent.com"}
@@ -70,11 +70,11 @@ const GoogleAuth = (props: any) => {
           const data: any = jwtDecode(credentials.credential || '');
           const result: any = await axios.post('http://localhost:5000/auth/', {
             token: null,
-            name: 'Battleship',
+            name: data.name,
             email: data.email,
+            picture: data.picture,
           });
           props.setUser(result.data.user);
-          props.socket.disconnect();
           props.setSocket(socketIOClient('http://localhost:5001/'));
           navigate('/home');
         }}

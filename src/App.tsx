@@ -4,10 +4,11 @@ import Navbar from './components/navbar/Navbar';
 import LoginPage from './pages/loginPage/LoginPage';
 import HomePage from './pages/homePage/HomePage';
 import GamePage from './pages/gamePage/GamePage';
+import '@fontsource/lalezar';
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-import socketIOClient from 'socket.io-client';
+import socketIOClient, { Socket } from 'socket.io-client';
 
 interface Data {
   token: string;
@@ -29,9 +30,7 @@ interface User {
 function App() {
   const [user, setUser] = React.useState<User | null>(null);
 
-  const [socket, setSocket] = React.useState(
-    socketIOClient('http://localhost:5001/')
-  );
+  const [socket, setSocket] = React.useState<Socket | null>(null);
 
   const [statusMatch, setStatusMatch] = React.useState('');
 
